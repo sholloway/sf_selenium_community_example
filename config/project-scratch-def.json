@@ -1,5 +1,23 @@
 {
-  "orgName": "samuel.holloway company",
-  "edition": "Developer",
-  "features": []
+	"orgName": "testing_example",
+	"edition": "Developer",
+	"features": [
+		"Communities",
+		"Sites",
+		"AuthorApex",
+		"DebugApex",
+		"EventLogFile",
+		"RecordTypes"
+	],
+	"settings": {
+		"lightningExperienceSettings": {
+			"enableS1DesktopEnabled": true
+		},
+		"mobileSettings": {
+			"enableS1EncryptedStoragePref2": false
+		},
+		"communitiesSettings": {
+			"enableNetworksEnabled": true
+		}
+	}
 }
