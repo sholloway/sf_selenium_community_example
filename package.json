@@ -1,0 +1,17 @@
+{
+  "name": "sf_community_selenium_example",
+  "version": "1.0.0",
+  "description": "Example project for testing the Salesforce UI with Selenium.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "format:code": "npx prettier --write \"./force-app/main/default/{aura,classes,lwc}/**/*.{cls,css,html,js}\"",
+    "build:scratch":"sfdx force:org:create --setdefaultusername -f config/project-scratch-def.json -d 1 --loglevel fatal"
+  },
+  "author": "Samuel D. Holloway",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^1.19.1",
+    "prettier-plugin-apex": "^1.2.0"
+  }
+}
