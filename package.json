@@ -6,7 +6,10 @@
   "scripts": {
     "test": "test",
     "format:code": "npx prettier --write \"./force-app/main/default/{aura,classes,lwc}/**/*.{cls,css,html,js}\"",
-    "build:scratch":"sfdx force:org:create --setdefaultusername -f config/project-scratch-def.json -d 1 --loglevel fatal"
+    "scratch":"npm run scratch:build && npm run scratch:push",  
+    "scratch:build":"sfdx force:org:create --setdefaultusername -f config/project-scratch-def.json -a testing_example -d 1 --loglevel fatal",
+    "scratch:push":"sfdx force:source:push -u testing_example",
+    "scratch:delete":"sfdx force:org:delete -u testing_example"
   },
   "author": "Samuel D. Holloway",
   "license": "MIT",
