@@ -64,8 +64,8 @@
         <name>standard__SalesforceCMS</name>
         <type>CustomApplication</type>
     </appMenuItems>
-    <appMenuItems>
+    <!-- <appMenuItems>
         <name>help_center</name>
         <type>Network</type>
-    </appMenuItems>
+    </appMenuItems> -->
 </AppMenu>
