@@ -16,7 +16,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="SF_URL" elementType="Argument">
             <stringProp name="Argument.name">SF_URL</stringProp>
-            <stringProp name="Argument.value">${__P(sf_url,sandbox-computing-energy-2288-dev-ed-17058af67f7.cs90.force.com/help/s)}</stringProp>
+            <stringProp name="Argument.value">${__P(sf_url, sandbox-app-business-6678-dev-ed-1705ec6d333.cs91.force.com/help/s)}</stringProp>
             <stringProp name="Argument.desc">The URL to run the test against.</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -76,7 +76,6 @@ var conditions = org.openqa.selenium.support.ui.ExpectedConditions;
 var ONE_SEC = 1000;
 var url = &apos;https://&apos;+ WDS.vars.get(&apos;SF_URL&apos;);
 
-//Let waits time out after 5 seconds.
 var wait = new support_ui.WebDriverWait(WDS.browser, ONE_SEC * 5);
 
 WDS.sampleResult.sampleStart(); //Start capturing the test&apos;s timing.
@@ -103,8 +102,6 @@ var support_ui = JavaImporter(org.openqa.selenium.support.ui.WebDriverWait)
 var wait = new support_ui.WebDriverWait(WDS.browser, 5000)
 var conditions = org.openqa.selenium.support.ui.ExpectedConditions
 
-var rich_text_path =&quot;/html[1]/body[1]/div[3]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[1]&quot;;
-//var rich_text_element = WDS.browser.findElement(pkg.By.xpath(rich_text_path));
 var rich_text_element = WDS.browser.findElement(pkg.By.cssSelector(&apos;p&apos;));
 var richTextValue = rich_text_element.getText();
 
@@ -140,9 +137,6 @@ var button = WDS.browser.findElement(pkg.By.cssSelector(&apos;button.slds-button
 WDS.sampleResult.sampleStart()
 // We click on search
 button.click()
-
-//wait for the different header.
-//wait.until(conditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;div.themeHeaderInner.centerAlignLogo-false.showNavMenuOnLeft-false.searchStyle-expanded&apos;))); 
 
 // Wait for the results... Which should be &quot;No results here&quot;.
 wait.until(conditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;div.forceCommunitySearch&apos;))); 
