@@ -16,7 +16,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="SF_URL" elementType="Argument">
             <stringProp name="Argument.name">SF_URL</stringProp>
-            <stringProp name="Argument.value">${__P(sf_url, sandbox-agility-efficiency-2850-dev--170268109f8.cs78.force.com/help/s/)}</stringProp>
+            <stringProp name="Argument.value">${__P(sf_url,sandbox-computing-energy-2288-dev-ed-17058af67f7.cs90.force.com/help/s)}</stringProp>
             <stringProp name="Argument.desc">The URL to run the test against.</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
@@ -59,7 +59,7 @@
             <stringProp name="WebDriverConfig.socks_host"></stringProp>
             <intProp name="WebDriverConfig.socks_port">8080</intProp>
             <stringProp name="WebDriverConfig.no_proxy">localhost</stringProp>
-            <boolProp name="WebDriverConfig.maximize_browser">true</boolProp>
+            <boolProp name="WebDriverConfig.maximize_browser">false</boolProp>
             <boolProp name="WebDriverConfig.reset_per_iteration">false</boolProp>
             <boolProp name="WebDriverConfig.dev_mode">false</boolProp>
             <boolProp name="FirefoxDriverConfig.general.useragent.override.enabled">false</boolProp>
@@ -68,24 +68,174 @@
             <collectionProp name="FirefoxDriverConfig.general.preferences"/>
           </com.googlecode.jmeter.plugins.webdriver.config.FirefoxDriverConfig>
           <hashTree/>
-          <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Search for Something" enabled="true">
-            <stringProp name="WebDriverSampler.script">var support_ui = JavaImporter(org.openqa.selenium.support.ui.WebDriverWait)
+          <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Load the Page" enabled="true">
+            <stringProp name="WebDriverSampler.script">var support_ui = JavaImporter(org.openqa.selenium.support.ui.WebDriverWait);
+var pkg = JavaImporter(org.openqa.selenium, org.openqa.selenium.support.ui);
+var conditions = org.openqa.selenium.support.ui.ExpectedConditions;
+
+var ONE_SEC = 1000;
+var url = &apos;https://&apos;+ WDS.vars.get(&apos;SF_URL&apos;);
+
+//Let waits time out after 5 seconds.
+var wait = new support_ui.WebDriverWait(WDS.browser, ONE_SEC * 5);
 
 WDS.sampleResult.sampleStart(); //Start capturing the test&apos;s timing.
-var url = &apos;https://&apos;+ WDS.vars.get(&apos;SF_URL&apos;);
-WDS.log.info(&apos;Browsing to Salesforce URL: &apos;+url);
-WDS.browser.get(url);
-
-//Wait for a second.
-var wait = new support_ui.WebDriverWait(WDS.browser, 1000);
-
-WDS.sampleResult.sampleEnd(); //Stop capturing the test&apos;s timing.
-</stringProp>
+try{
+	WDS.log.info(&apos;Browsing to Salesforce URL: &apos;+url);
+	WDS.browser.get(url);
+	wait.until(conditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;p&apos;))) //The Rich Text Element
+	WDS.sampleResult.sampleEnd(); //Stop capturing the test&apos;s timing.
+}catch(e){
+	WDS.sampleResult.sampleEnd()
+	WDS.sampleResult.setSuccessful(false);
+	WDS.sampleResult.setResponseMessage(&quot;Failed to load page, timeout occured&quot;);
+}</stringProp>
             <stringProp name="WebDriverSampler.parameters"></stringProp>
             <stringProp name="WebDriverSampler.language">javascript</stringProp>
           </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
           <hashTree/>
+          <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Find Rich Text Component Controller" enabled="true"/>
+          <hashTree>
+            <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Verify Rich Text Values" enabled="true">
+              <stringProp name="TestPlan.comments">This is a silly example. In a performance test, we don&apos;t want to verify the correctness of a page.</stringProp>
+              <stringProp name="WebDriverSampler.script">var pkg = JavaImporter(org.openqa.selenium)
+var support_ui = JavaImporter(org.openqa.selenium.support.ui.WebDriverWait)
+var wait = new support_ui.WebDriverWait(WDS.browser, 5000)
+var conditions = org.openqa.selenium.support.ui.ExpectedConditions
+
+var rich_text_path =&quot;/html[1]/body[1]/div[3]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/p[1]&quot;;
+//var rich_text_element = WDS.browser.findElement(pkg.By.xpath(rich_text_path));
+var rich_text_element = WDS.browser.findElement(pkg.By.cssSelector(&apos;p&apos;));
+var richTextValue = rich_text_element.getText();
+
+WDS.sampleResult.sampleStart()
+if(!rich_text_element || richTextValue !== &quot;Hello World&quot;) {
+    	WDS.sampleResult.successful = false
+    	WDS.sampleResult.responseMessage = &apos;There was no rich text or it did not say Hello World.&apos;
+}
+
+WDS.sampleResult.sampleEnd()</stringProp>
+              <stringProp name="WebDriverSampler.parameters"></stringProp>
+              <stringProp name="WebDriverSampler.language">javascript</stringProp>
+            </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+            <hashTree/>
+            <com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler guiclass="com.googlecode.jmeter.plugins.webdriver.sampler.gui.WebDriverSamplerGui" testclass="com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler" testname="Run Search" enabled="true">
+              <stringProp name="TestPlan.comments">Search for a non-existant article.</stringProp>
+              <stringProp name="WebDriverSampler.script">var pkg = JavaImporter(org.openqa.selenium)
+var support_ui = JavaImporter(org.openqa.selenium.support.ui.WebDriverWait)
+var wait = new support_ui.WebDriverWait(WDS.browser, 5000)
+var conditions = org.openqa.selenium.support.ui.ExpectedConditions
+
+
+// We find the search field by its id &quot;s&quot;
+var searchField = WDS.browser.findElement(pkg.By.cssSelector(&apos;input.search-input&apos;));
+
+// We enter the parameter in WebDriver Sampler: in this case &quot;Help&quot;
+searchField.sendKeys([WDS.parameters]);
+
+// We find the headersearchsubmit button
+var button = WDS.browser.findElement(pkg.By.cssSelector(&apos;button.slds-button.slds-button_icon.search-inputSearchButton.search-inputSearchButton--right.slds-button_icon-border&apos;));
+
+// We only start sampling here
+WDS.sampleResult.sampleStart()
+// We click on search
+button.click()
+
+//wait for the different header.
+//wait.until(conditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;div.themeHeaderInner.centerAlignLogo-false.showNavMenuOnLeft-false.searchStyle-expanded&apos;))); 
+
+// Wait for the results... Which should be &quot;No results here&quot;.
+wait.until(conditions.presenceOfElementLocated(pkg.By.cssSelector(&apos;div.forceCommunitySearch&apos;))); 
+
+//Verify that it&apos;s &quot;No results here&quot;
+var searchResult = WDS.browser.findElement(pkg.By.cssSelector(&apos;div.forceCommunitySearch&apos;));
+if(searchResult.getText() !== &quot;No results here&quot;){
+	WDS.log.error(searchResult.getText());
+	WDS.sampleResult.successful = false
+    	WDS.sampleResult.responseMessage = &apos;The search results did not match what was expected.&apos;
+}
+
+WDS.sampleResult.sampleEnd()</stringProp>
+              <stringProp name="WebDriverSampler.parameters">Help</stringProp>
+              <stringProp name="WebDriverSampler.language">javascript</stringProp>
+            </com.googlecode.jmeter.plugins.webdriver.sampler.WebDriverSampler>
+            <hashTree/>
+          </hashTree>
         </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
       </hashTree>
     </hashTree>
   </hashTree>
